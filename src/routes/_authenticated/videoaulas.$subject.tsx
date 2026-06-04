@@ -2,7 +2,7 @@ import { useState } from "react";
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowLeft, ExternalLink, PlayCircle } from "lucide-react";
 import logo from "@/assets/ampliaedu-logo.png";
-import { findSubject } from "@/lib/videos";
+import { findSubject, type Subject } from "@/lib/videos";
 
 export const Route = createFileRoute("/_authenticated/videoaulas/$subject")({
   head: ({ params }) => ({ meta: [{ title: `${params.subject} — Videoaulas — AmpliaEdu` }] }),
@@ -24,7 +24,7 @@ export const Route = createFileRoute("/_authenticated/videoaulas/$subject")({
 });
 
 function SubjectPage() {
-  const { subject } = Route.useLoaderData();
+  const { subject } = Route.useLoaderData() as { subject: Subject };
   const [currentId, setCurrentId] = useState(subject.videos[0].id);
   const current = subject.videos.find((v) => v.id === currentId) ?? subject.videos[0];
 

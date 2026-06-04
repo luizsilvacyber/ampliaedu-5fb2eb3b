@@ -8,7 +8,7 @@ import { Progress } from "@/components/ui/progress";
 import logo from "@/assets/ampliaedu-logo.png";
 import {
   Flame, Trophy, BookOpen, Brain, Youtube, Target,
-  ChevronRight, LogOut, Sparkles, Calendar,
+  ChevronRight, LogOut, Sparkles, User as UserIcon,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -17,11 +17,17 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
   component: Dashboard,
 });
 
-const tracks = [
-  { icon: BookOpen, title: "Matemática", desc: "Continue: Funções de 1º grau", progress: 62, color: "from-brand to-brand-dark" },
-  { icon: Brain, title: "Português", desc: "Próximo: Interpretação de texto", progress: 34, color: "from-success to-brand" },
-  { icon: Target, title: "Modo ENEM", desc: "Simulado disponível", progress: 18, color: "from-brand-dark to-brand" },
-  { icon: Youtube, title: "Videoaulas", desc: "5 novas curadas para você", progress: 0, color: "from-brand to-success" },
+type TrackLink =
+  | { kind: "subject"; subject: string }
+  | { kind: "route"; to: "/enem" | "/videoaulas" };
+
+const tracks: Array<{
+  icon: typeof BookOpen; title: string; desc: string; progress: number; color: string; link: TrackLink;
+}> = [
+  { icon: BookOpen, title: "Matemática", desc: "Continue: Funções de 1º grau", progress: 62, color: "from-brand to-brand-dark", link: { kind: "subject", subject: "matematica" } },
+  { icon: Brain, title: "Português", desc: "Próximo: Interpretação de texto", progress: 34, color: "from-success to-brand", link: { kind: "subject", subject: "portugues" } },
+  { icon: Target, title: "Modo ENEM", desc: "Simulado disponível", progress: 18, color: "from-brand-dark to-brand", link: { kind: "route", to: "/enem" } },
+  { icon: Youtube, title: "Videoaulas", desc: "10 aulas por matéria", progress: 0, color: "from-brand to-success", link: { kind: "route", to: "/videoaulas" } },
 ];
 
 const weekDays = ["S", "T", "Q", "Q", "S", "S", "D"];
@@ -121,7 +127,38 @@ function Dashboard() {
           </div>
           <div className="grid sm:grid-cols-2 gap-4">
             {tracks.map((t) => (
-              <button key={t.title} className="text-left group rounded-2xl border border-border bg-card p-5 hover:shadow-[var(--shadow-soft)] hover:border-brand/40 transition-all">
+              <TrackCard key={t.title} t={t} />
+            ))}
+          </div>
+        </section>
+
+        {/* Quick actions */}
+        <section>
+          <h2 className="text-xl font-bold tracking-tight mb-4">Acesso rápido</h2>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <a href="https://chat.openai.com/" target="_blank" rel="noreferrer"
+              className="rounded-2xl border border-border bg-card p-4 hover:border-brand hover:text-brand transition-colors flex flex-col items-center gap-2 text-sm font-medium">
+              <Brain className="h-5 w-5" /> IA Tutora
+            </a>
+            <Link to="/videoaulas" className="rounded-2xl border border-border bg-card p-4 hover:border-brand hover:text-brand transition-colors flex flex-col items-center gap-2 text-sm font-medium">
+              <Youtube className="h-5 w-5" /> Videoaulas
+            </Link>
+            <Link to="/enem" className="rounded-2xl border border-border bg-card p-4 hover:border-brand hover:text-brand transition-colors flex flex-col items-center gap-2 text-sm font-medium">
+              <Target className="h-5 w-5" /> Simulado
+            </Link>
+            <Link to="/profile" className="rounded-2xl border border-border bg-card p-4 hover:border-brand hover:text-brand transition-colors flex flex-col items-center gap-2 text-sm font-medium">
+              <UserIcon className="h-5 w-5" /> Meu perfil
+            </Link>
+          </div>
+        </section>
+      </main>
+    </div>
+  );
+}
+
+function TrackCard({ t }: { t: (typeof tracks)[number] }) {
+  const inner = (
+    <>
                 <div className="flex items-start gap-4">
                   <div className={`h-12 w-12 rounded-xl bg-gradient-to-br ${t.color} flex items-center justify-center text-white shrink-0`}>
                     <t.icon className="h-6 w-6" />
@@ -140,29 +177,19 @@ function Dashboard() {
                     )}
                   </div>
                 </div>
-              </button>
-            ))}
-          </div>
-        </section>
-
-        {/* Quick actions */}
-        <section>
-          <h2 className="text-xl font-bold tracking-tight mb-4">Acesso rápido</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            {[
-              { icon: Brain, label: "IA Tutora" },
-              { icon: BookOpen, label: "Biblioteca" },
-              { icon: Target, label: "Simulado" },
-              { icon: Calendar, label: "Meta diária" },
-            ].map((a) => (
-              <button key={a.label} className="rounded-2xl border border-border bg-card p-4 hover:border-brand hover:text-brand transition-colors flex flex-col items-center gap-2 text-sm font-medium">
-                <a.icon className="h-5 w-5" />
-                {a.label}
-              </button>
-            ))}
-          </div>
-        </section>
-      </main>
-    </div>
+    </>
+  );
+  const cls = "text-left group rounded-2xl border border-border bg-card p-5 hover:shadow-[var(--shadow-soft)] hover:border-brand/40 transition-all block";
+  if (t.link.kind === "subject") {
+    return (
+      <Link to="/videoaulas/$subject" params={{ subject: t.link.subject }} className={cls}>
+        {inner}
+      </Link>
+    );
+  }
+  return (
+    <Link to={t.link.to} className={cls}>
+      {inner}
+    </Link>
   );
 }
