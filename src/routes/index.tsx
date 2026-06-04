@@ -57,9 +57,11 @@ function Index() {
             <a href="#ia" className="hover:text-foreground transition-colors">IA Tutora</a>
           </nav>
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="sm" className="hidden sm:inline-flex">Entrar</Button>
-            <Button size="sm" className="bg-brand hover:bg-brand/90 text-brand-foreground shadow-[var(--shadow-soft)]">
-              Começar grátis
+            <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
+              <Link to="/auth" search={{ mode: "login" }}>Entrar</Link>
+            </Button>
+            <Button asChild size="sm" className="bg-brand hover:bg-brand/90 text-brand-foreground shadow-[var(--shadow-soft)]">
+              <Link to="/auth" search={{ mode: "signup" }}>Começar grátis</Link>
             </Button>
           </div>
         </div>
@@ -85,11 +87,11 @@ function Index() {
                 Do Fundamental ao Ensino Médio. Trilhas personalizadas, videoaulas curadas por IA, biblioteca digital, simulados ENEM e uma tutora inteligente sempre disponível.
               </p>
               <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
-                <Button size="lg" className="bg-brand hover:bg-brand/90 text-brand-foreground shadow-[var(--shadow-elegant)] h-12 px-7 text-base">
-                  Criar conta gratuita
+                <Button asChild size="lg" className="bg-brand hover:bg-brand/90 text-brand-foreground shadow-[var(--shadow-elegant)] h-12 px-7 text-base">
+                  <Link to="/auth" search={{ mode: "signup" }}>Criar conta gratuita</Link>
                 </Button>
-                <Button size="lg" variant="outline" className="h-12 px-7 text-base">
-                  Explorar plataforma
+                <Button asChild size="lg" variant="outline" className="h-12 px-7 text-base">
+                  <a href="#recursos">Explorar plataforma</a>
                 </Button>
               </div>
               <div className="mt-8 flex items-center gap-6 justify-center lg:justify-start text-sm text-muted-foreground">
@@ -184,11 +186,8 @@ function Index() {
                   A IA da AmpliaEdu encontra as melhores videoaulas do YouTube, monta playlists por tema, sugere exercícios e tira suas dúvidas no momento exato em que você precisa.
                 </p>
                 <div className="mt-8 flex flex-wrap gap-3">
-                  <Button size="lg" className="bg-white text-brand-dark hover:bg-white/90 h-12 px-6">
-                    Experimentar IA agora
-                  </Button>
-                  <Button size="lg" variant="outline" className="border-white/30 bg-white/10 text-white hover:bg-white/20 h-12 px-6">
-                    Ver demonstração
+                  <Button asChild size="lg" className="bg-white text-brand-dark hover:bg-white/90 h-12 px-6">
+                    <Link to="/auth" search={{ mode: "signup" }}>Experimentar IA agora</Link>
                   </Button>
                 </div>
               </div>
@@ -215,8 +214,8 @@ function Index() {
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl sm:text-5xl font-bold tracking-tight">Pronto para ampliar seus estudos?</h2>
           <p className="mt-4 text-lg text-muted-foreground">Junte-se à nova geração de estudantes que aprende com IA, gamificação e os melhores conteúdos do Brasil.</p>
-          <Button size="lg" className="mt-8 bg-brand hover:bg-brand/90 text-brand-foreground shadow-[var(--shadow-elegant)] h-12 px-8 text-base">
-            Criar minha conta gratuita
+          <Button asChild size="lg" className="mt-8 bg-brand hover:bg-brand/90 text-brand-foreground shadow-[var(--shadow-elegant)] h-12 px-8 text-base">
+            <Link to="/auth" search={{ mode: "signup" }}>Criar minha conta gratuita</Link>
           </Button>
         </div>
       </section>
