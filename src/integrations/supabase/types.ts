@@ -14,6 +14,30 @@ export type Database = {
   }
   public: {
     Tables: {
+      lesson_completions: {
+        Row: {
+          completed_at: string
+          id: string
+          subject_slug: string
+          user_id: string
+          video_id: string
+        }
+        Insert: {
+          completed_at?: string
+          id?: string
+          subject_slug: string
+          user_id: string
+          video_id: string
+        }
+        Update: {
+          completed_at?: string
+          id?: string
+          subject_slug?: string
+          user_id?: string
+          video_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -79,6 +103,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      complete_lesson: {
+        Args: { _subject_slug: string; _video_id: string }
+        Returns: Json
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
