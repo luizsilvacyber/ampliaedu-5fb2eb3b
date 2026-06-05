@@ -1,13 +1,14 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
-import { getDashboard } from "@/lib/dashboard.functions";
+import { getProgress } from "@/lib/lessons.functions";
+import { subjects, totalLessons } from "@/lib/videos";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import logo from "@/assets/ampliaedu-logo.png";
 import {
-  Flame, Trophy, BookOpen, Brain, Youtube, Target,
+  Flame, Trophy, Brain, Youtube, Target,
   ChevronRight, LogOut, Sparkles, User as UserIcon,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -17,30 +18,24 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
   component: Dashboard,
 });
 
-type TrackLink =
-  | { kind: "subject"; subject: string }
-  | { kind: "route"; to: "/enem" | "/videoaulas" };
-
-const tracks: Array<{
-  icon: typeof BookOpen; title: string; desc: string; progress: number; color: string; link: TrackLink;
-}> = [
-  { icon: BookOpen, title: "Matemática", desc: "Continue: Funções de 1º grau", progress: 62, color: "from-brand to-brand-dark", link: { kind: "subject", subject: "matematica" } },
-  { icon: Brain, title: "Português", desc: "Próximo: Interpretação de texto", progress: 34, color: "from-success to-brand", link: { kind: "subject", subject: "portugues" } },
-  { icon: Target, title: "Modo ENEM", desc: "Simulado disponível", progress: 18, color: "from-brand-dark to-brand", link: { kind: "route", to: "/enem" } },
-  { icon: Youtube, title: "Videoaulas", desc: "10 aulas por matéria", progress: 0, color: "from-brand to-success", link: { kind: "route", to: "/videoaulas" } },
-];
-
 const weekDays = ["S", "T", "Q", "Q", "S", "S", "D"];
 
 function Dashboard() {
   const navigate = useNavigate();
-  const fetchDashboard = useServerFn(getDashboard);
+  const fetchProgress = useServerFn(getProgress);
   const { data, isLoading } = useQuery({
-    queryKey: ["dashboard"],
-    queryFn: () => fetchDashboard(),
+    queryKey: ["progress"],
+    queryFn: () => fetchProgress(),
   });
 
   const profile = data?.profile;
+  const completions = data?.completions ?? [];
+  const bySubject = new Map<string, number>();
+  for (const c of completions) bySubject.set(c.subject_slug, (bySubject.get(c.subject_slug) ?? 0) + 1);
+  const totalDone = completions.length;
+  const total = totalLessons();
+  const overallPct = Math.round((totalDone / total) * 100);
+
   const name = profile?.display_name ?? "Estudante";
   const xp = profile?.xp ?? 0;
   const streak = profile?.streak_days ?? 0;
@@ -117,18 +112,52 @@ function Dashboard() {
           </div>
         </section>
 
+        {/* Overall progress */}
+        <section className="rounded-2xl border border-border bg-card p-5">
+          <div className="flex items-center justify-between mb-2">
+            <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Progresso geral</h2>
+            <span className="text-sm font-semibold">{totalDone}/{total} aulas · {overallPct}%</span>
+          </div>
+          <Progress value={overallPct} className="h-2" />
+        </section>
+
         {/* Tracks */}
         <section>
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-bold tracking-tight">Suas trilhas</h2>
-            <Button variant="ghost" size="sm" className="text-muted-foreground">
-              Ver todas <ChevronRight className="h-4 w-4" />
-            </Button>
+            <Link to="/videoaulas" className="text-sm font-medium text-brand hover:underline inline-flex items-center gap-1">
+              Ver tudo <ChevronRight className="h-4 w-4" />
+            </Link>
           </div>
-          <div className="grid sm:grid-cols-2 gap-4">
-            {tracks.map((t) => (
-              <TrackCard key={t.title} t={t} />
-            ))}
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {subjects.map((s) => {
+              const done = bySubject.get(s.slug) ?? 0;
+              const pct = Math.round((done / s.videos.length) * 100);
+              const remaining = s.videos.length - done;
+              return (
+                <Link key={s.slug} to="/videoaulas/$subject" params={{ subject: s.slug }}
+                  className="group rounded-2xl border border-border bg-card p-5 hover:shadow-[var(--shadow-soft)] hover:border-brand/40 transition-all">
+                  <div className="flex items-start gap-3">
+                    <div className={`h-11 w-11 rounded-xl bg-gradient-to-br ${s.color} text-white flex items-center justify-center text-lg shrink-0`}>
+                      {s.emoji}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between gap-2">
+                        <h3 className="font-semibold truncate">{s.name}</h3>
+                        <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-brand group-hover:translate-x-0.5 transition-all" />
+                      </div>
+                      <p className="text-xs text-muted-foreground mt-0.5">
+                        {done === 0 ? "Comece sua trilha" : remaining === 0 ? "🏆 Trilha concluída!" : `Faltam ${remaining} aulas`}
+                      </p>
+                      <div className="mt-3">
+                        <Progress value={pct} className="h-1.5" />
+                        <p className="text-[11px] text-muted-foreground mt-1">{done}/{s.videos.length} · {pct}%</p>
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         </section>
 
@@ -153,43 +182,5 @@ function Dashboard() {
         </section>
       </main>
     </div>
-  );
-}
-
-function TrackCard({ t }: { t: (typeof tracks)[number] }) {
-  const inner = (
-    <>
-                <div className="flex items-start gap-4">
-                  <div className={`h-12 w-12 rounded-xl bg-gradient-to-br ${t.color} flex items-center justify-center text-white shrink-0`}>
-                    <t.icon className="h-6 w-6" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between gap-2">
-                      <h3 className="font-semibold truncate">{t.title}</h3>
-                      <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-brand group-hover:translate-x-0.5 transition-all" />
-                    </div>
-                    <p className="text-sm text-muted-foreground truncate mt-0.5">{t.desc}</p>
-                    {t.progress > 0 && (
-                      <div className="mt-3">
-                        <Progress value={t.progress} className="h-1.5" />
-                        <p className="text-[11px] text-muted-foreground mt-1">{t.progress}% concluído</p>
-                      </div>
-                    )}
-                  </div>
-                </div>
-    </>
-  );
-  const cls = "text-left group rounded-2xl border border-border bg-card p-5 hover:shadow-[var(--shadow-soft)] hover:border-brand/40 transition-all block";
-  if (t.link.kind === "subject") {
-    return (
-      <Link to="/videoaulas/$subject" params={{ subject: t.link.subject }} className={cls}>
-        {inner}
-      </Link>
-    );
-  }
-  return (
-    <Link to={t.link.to} className={cls}>
-      {inner}
-    </Link>
   );
 }
