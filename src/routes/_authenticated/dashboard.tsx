@@ -18,19 +18,6 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
   component: Dashboard,
 });
 
-type TrackLink =
-  | { kind: "subject"; subject: string }
-  | { kind: "route"; to: "/enem" | "/videoaulas" };
-
-const tracks: Array<{
-  icon: typeof BookOpen; title: string; desc: string; progress: number; color: string; link: TrackLink;
-}> = [
-  { icon: BookOpen, title: "Matemática", desc: "Continue: Funções de 1º grau", progress: 62, color: "from-brand to-brand-dark", link: { kind: "subject", subject: "matematica" } },
-  { icon: Brain, title: "Português", desc: "Próximo: Interpretação de texto", progress: 34, color: "from-success to-brand", link: { kind: "subject", subject: "portugues" } },
-  { icon: Target, title: "Modo ENEM", desc: "Simulado disponível", progress: 18, color: "from-brand-dark to-brand", link: { kind: "route", to: "/enem" } },
-  { icon: Youtube, title: "Videoaulas", desc: "10 aulas por matéria", progress: 0, color: "from-brand to-success", link: { kind: "route", to: "/videoaulas" } },
-];
-
 const weekDays = ["S", "T", "Q", "Q", "S", "S", "D"];
 
 function Dashboard() {
