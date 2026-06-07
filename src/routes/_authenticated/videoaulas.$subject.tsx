@@ -5,7 +5,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft, Check, CheckCircle2, ExternalLink, PlayCircle } from "lucide-react";
 import { toast } from "sonner";
 import logo from "@/assets/ampliaedu-logo.png";
-import { findSubject, type Subject } from "@/lib/videos";
+import { findSubject, thumbnailUrl, youtubeUrl, type Subject } from "@/lib/videos";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { completeLesson, getProgress } from "@/lib/lessons.functions";
@@ -33,7 +33,6 @@ function SubjectPage() {
   const { subject } = Route.useLoaderData() as { subject: Subject };
   const [currentId, setCurrentId] = useState(subject.videos[0].id);
   const current = subject.videos.find((v) => v.id === currentId) ?? subject.videos[0];
-  const currentIndex = subject.videos.findIndex((v) => v.id === current.id);
 
   const qc = useQueryClient();
   const fetchProgress = useServerFn(getProgress);
@@ -71,12 +70,8 @@ function SubjectPage() {
     onError: (e: Error) => toast.error(e.message),
   });
 
-  const embedSrc = subject.playlistId
-    ? `https://www.youtube.com/embed/videoseries?list=${subject.playlistId}&index=${currentIndex + 1}&rel=0`
-    : `https://www.youtube.com/embed/${current.id}?rel=0`;
-  const externalHref = subject.playlistId
-    ? `https://www.youtube.com/playlist?list=${subject.playlistId}`
-    : `https://www.youtube.com/watch?v=${current.id}`;
+  const embedSrc = `https://www.youtube.com/embed/${current.id}?rel=0`;
+  const externalHref = youtubeUrl(current.id);
 
   return (
     <div className="min-h-screen bg-secondary/30">
@@ -151,16 +146,19 @@ function SubjectPage() {
               const active = v.id === current.id;
               const done = completedSet.has(v.id);
               return (
-                <button key={v.id} onClick={() => setCurrentId(v.id)}
+                <button key={`${v.id}-${i}`} onClick={() => setCurrentId(v.id)}
                   className={`w-full text-left flex items-start gap-3 p-3 rounded-xl border transition-all ${active ? "border-brand bg-brand/5" : "border-border bg-card hover:border-brand/40"}`}>
-                  <div className={`shrink-0 h-8 w-8 rounded-lg flex items-center justify-center text-xs font-bold ${done ? "bg-success text-white" : active ? "bg-brand text-white" : "bg-muted text-muted-foreground"}`}>
-                    {done ? <CheckCircle2 className="h-4 w-4" /> : i + 1}
+                  <div className="relative shrink-0 w-24 aspect-video rounded-lg overflow-hidden bg-muted">
+                    <img src={thumbnailUrl(v.id)} alt="" loading="lazy" className="w-full h-full object-cover" />
+                    <div className={`absolute top-1 left-1 h-5 w-5 rounded-md flex items-center justify-center text-[10px] font-bold ${done ? "bg-success text-white" : active ? "bg-brand text-white" : "bg-background/90 text-foreground"}`}>
+                      {done ? <CheckCircle2 className="h-3 w-3" /> : i + 1}
+                    </div>
                   </div>
                   <div className="min-w-0">
                     <p className="text-sm font-medium truncate flex items-center gap-1">
-                      {active && <PlayCircle className="h-3.5 w-3.5 text-brand shrink-0" />} {v.title}
+                      {active && <PlayCircle className="h-3.5 w-3.5 text-brand shrink-0" />} Aula {i + 1}
                     </p>
-                    <p className="text-xs text-muted-foreground truncate">{v.channel}</p>
+                    <p className="text-xs text-muted-foreground truncate">{subject.name} · YouTube</p>
                   </div>
                 </button>
               );
