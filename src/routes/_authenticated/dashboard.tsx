@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import logo from "@/assets/ampliaedu-logo.png";
 import {
-  Flame, Trophy, Brain, Youtube, Target,
+  Flame, Trophy, Brain, Youtube, Target, BookOpen,
   ChevronRight, LogOut, Sparkles, User as UserIcon,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -164,7 +164,7 @@ function Dashboard() {
         {/* Quick actions */}
         <section>
           <h2 className="text-xl font-bold tracking-tight mb-4">Acesso rápido</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
             <a href="https://chat.openai.com/" target="_blank" rel="noreferrer"
               className="rounded-2xl border border-border bg-card p-4 hover:border-brand hover:text-brand transition-colors flex flex-col items-center gap-2 text-sm font-medium">
               <Brain className="h-5 w-5" /> IA Tutora
@@ -175,6 +175,10 @@ function Dashboard() {
             <Link to="/enem" className="rounded-2xl border border-border bg-card p-4 hover:border-brand hover:text-brand transition-colors flex flex-col items-center gap-2 text-sm font-medium">
               <Target className="h-5 w-5" /> Simulado
             </Link>
+            <a href="https://biblion.odilo.us/" target="_blank" rel="noreferrer"
+              className="rounded-2xl border border-border bg-card p-4 hover:border-brand hover:text-brand transition-colors flex flex-col items-center gap-2 text-sm font-medium">
+              <BookOpen className="h-5 w-5" /> Biblioteca Digital
+            </a>
             <Link to="/profile" className="rounded-2xl border border-border bg-card p-4 hover:border-brand hover:text-brand transition-colors flex flex-col items-center gap-2 text-sm font-medium">
               <UserIcon className="h-5 w-5" /> Meu perfil
             </Link>
