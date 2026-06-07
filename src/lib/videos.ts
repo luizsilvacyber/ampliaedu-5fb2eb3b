@@ -95,8 +95,8 @@ export const subjects: Subject[] = [
     emoji: "🏛️",
     color: "from-brand-dark to-success",
     videos: buildLessons("YouTube", [
-      "ZdIrgqd7keI","wvkslsfuY4c","L-A8u46YUss","FJ7FwQsDWvk","Z7S7N6EDp2g",
-      "gfZztGey4ig","Fr1zTZT3a94","vJaZEH6fRWc","_cN9Iomj8tw","d7BeCopGqP4",
+      "lk0Jc7w6TRE","bLH15zBoP_E","Z1Y775NylVc","pfHPiXjTmJY","m6qgmfzrpbE",
+      "6u6Ye7n_I1M","ecmXjooN3RE","Grn2gXVGMEo","fzItVzLSjyw","7rMS9ETGEoE",
     ]),
   },
   {
@@ -115,8 +115,8 @@ export const subjects: Subject[] = [
     emoji: "👥",
     color: "from-success to-brand-dark",
     videos: buildLessons("YouTube", [
-      "lk0Jc7w6TRE","bLH15zBoP_E","Z1Y775NylVc","pfHPiXjTmJY","m6qgmfzrpbE",
-      "6u6Ye7n_I1M","ecmXjooN3RE","Grn2gXVGMEo","fzItVzLSjyw","7rMS9ETGEoE",
+      "ZdIrgqd7keI","wvkslsfuY4c","L-A8u46YUss","FJ7FwQsDWvk","Z7S7N6EDp2g",
+      "gfZztGey4ig","Fr1zTZT3a94","vJaZEH6fRWc","_cN9Iomj8tw","d7BeCopGqP4",
     ]),
   },
   {
