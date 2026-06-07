@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import logo from "@/assets/ampliaedu-logo.png";
 import {
-  Flame, Trophy, Brain, Youtube, Target,
+  Flame, Trophy, Brain, Youtube, Target, BookOpen,
   ChevronRight, LogOut, Sparkles, User as UserIcon,
 } from "lucide-react";
 import { toast } from "sonner";
