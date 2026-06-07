@@ -175,6 +175,10 @@ function Dashboard() {
             <Link to="/enem" className="rounded-2xl border border-border bg-card p-4 hover:border-brand hover:text-brand transition-colors flex flex-col items-center gap-2 text-sm font-medium">
               <Target className="h-5 w-5" /> Simulado
             </Link>
+            <a href="https://biblion.odilo.us/" target="_blank" rel="noreferrer"
+              className="rounded-2xl border border-border bg-card p-4 hover:border-brand hover:text-brand transition-colors flex flex-col items-center gap-2 text-sm font-medium">
+              <BookOpen className="h-5 w-5" /> Biblioteca Digital
+            </a>
             <Link to="/profile" className="rounded-2xl border border-border bg-card p-4 hover:border-brand hover:text-brand transition-colors flex flex-col items-center gap-2 text-sm font-medium">
               <UserIcon className="h-5 w-5" /> Meu perfil
             </Link>
