@@ -19,6 +19,7 @@ import { Route as AuthenticatedDashboardRouteImport } from './routes/_authentica
 import { Route as AuthenticatedVideoaulasIndexRouteImport } from './routes/_authenticated/videoaulas.index'
 import { Route as AuthenticatedExerciciosIndexRouteImport } from './routes/_authenticated/exercicios.index'
 import { Route as AuthenticatedVideoaulasSubjectRouteImport } from './routes/_authenticated/videoaulas.$subject'
+import { Route as AuthenticatedExerciciosSubjectRouteImport } from './routes/_authenticated/exercicios.$subject'
 
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
@@ -72,6 +73,12 @@ const AuthenticatedVideoaulasSubjectRoute =
     path: '/videoaulas/$subject',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedExerciciosSubjectRoute =
+  AuthenticatedExerciciosSubjectRouteImport.update({
+    id: '/exercicios/$subject',
+    path: '/exercicios/$subject',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -80,6 +87,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/enem': typeof AuthenticatedEnemRoute
   '/profile': typeof AuthenticatedProfileRoute
+  '/exercicios/$subject': typeof AuthenticatedExerciciosSubjectRoute
   '/videoaulas/$subject': typeof AuthenticatedVideoaulasSubjectRoute
   '/exercicios/': typeof AuthenticatedExerciciosIndexRoute
   '/videoaulas/': typeof AuthenticatedVideoaulasIndexRoute
@@ -91,6 +99,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/enem': typeof AuthenticatedEnemRoute
   '/profile': typeof AuthenticatedProfileRoute
+  '/exercicios/$subject': typeof AuthenticatedExerciciosSubjectRoute
   '/videoaulas/$subject': typeof AuthenticatedVideoaulasSubjectRoute
   '/exercicios': typeof AuthenticatedExerciciosIndexRoute
   '/videoaulas': typeof AuthenticatedVideoaulasIndexRoute
@@ -104,6 +113,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/enem': typeof AuthenticatedEnemRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
+  '/_authenticated/exercicios/$subject': typeof AuthenticatedExerciciosSubjectRoute
   '/_authenticated/videoaulas/$subject': typeof AuthenticatedVideoaulasSubjectRoute
   '/_authenticated/exercicios/': typeof AuthenticatedExerciciosIndexRoute
   '/_authenticated/videoaulas/': typeof AuthenticatedVideoaulasIndexRoute
@@ -117,6 +127,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/enem'
     | '/profile'
+    | '/exercicios/$subject'
     | '/videoaulas/$subject'
     | '/exercicios/'
     | '/videoaulas/'
@@ -128,6 +139,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/enem'
     | '/profile'
+    | '/exercicios/$subject'
     | '/videoaulas/$subject'
     | '/exercicios'
     | '/videoaulas'
@@ -140,6 +152,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard'
     | '/_authenticated/enem'
     | '/_authenticated/profile'
+    | '/_authenticated/exercicios/$subject'
     | '/_authenticated/videoaulas/$subject'
     | '/_authenticated/exercicios/'
     | '/_authenticated/videoaulas/'
@@ -224,6 +237,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedVideoaulasSubjectRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/exercicios/$subject': {
+      id: '/_authenticated/exercicios/$subject'
+      path: '/exercicios/$subject'
+      fullPath: '/exercicios/$subject'
+      preLoaderRoute: typeof AuthenticatedExerciciosSubjectRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
@@ -231,6 +251,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedEnemRoute: typeof AuthenticatedEnemRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
+  AuthenticatedExerciciosSubjectRoute: typeof AuthenticatedExerciciosSubjectRoute
   AuthenticatedVideoaulasSubjectRoute: typeof AuthenticatedVideoaulasSubjectRoute
   AuthenticatedExerciciosIndexRoute: typeof AuthenticatedExerciciosIndexRoute
   AuthenticatedVideoaulasIndexRoute: typeof AuthenticatedVideoaulasIndexRoute
@@ -240,6 +261,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedEnemRoute: AuthenticatedEnemRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
+  AuthenticatedExerciciosSubjectRoute: AuthenticatedExerciciosSubjectRoute,
   AuthenticatedVideoaulasSubjectRoute: AuthenticatedVideoaulasSubjectRoute,
   AuthenticatedExerciciosIndexRoute: AuthenticatedExerciciosIndexRoute,
   AuthenticatedVideoaulasIndexRoute: AuthenticatedVideoaulasIndexRoute,
