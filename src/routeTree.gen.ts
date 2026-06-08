@@ -17,6 +17,7 @@ import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedEnemRouteImport } from './routes/_authenticated/enem'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedVideoaulasIndexRouteImport } from './routes/_authenticated/videoaulas.index'
+import { Route as AuthenticatedExerciciosIndexRouteImport } from './routes/_authenticated/exercicios.index'
 import { Route as AuthenticatedVideoaulasSubjectRouteImport } from './routes/_authenticated/videoaulas.$subject'
 
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
@@ -59,6 +60,12 @@ const AuthenticatedVideoaulasIndexRoute =
     path: '/videoaulas/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedExerciciosIndexRoute =
+  AuthenticatedExerciciosIndexRouteImport.update({
+    id: '/exercicios/',
+    path: '/exercicios/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedVideoaulasSubjectRoute =
   AuthenticatedVideoaulasSubjectRouteImport.update({
     id: '/videoaulas/$subject',
@@ -74,6 +81,7 @@ export interface FileRoutesByFullPath {
   '/enem': typeof AuthenticatedEnemRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/videoaulas/$subject': typeof AuthenticatedVideoaulasSubjectRoute
+  '/exercicios/': typeof AuthenticatedExerciciosIndexRoute
   '/videoaulas/': typeof AuthenticatedVideoaulasIndexRoute
 }
 export interface FileRoutesByTo {
@@ -84,6 +92,7 @@ export interface FileRoutesByTo {
   '/enem': typeof AuthenticatedEnemRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/videoaulas/$subject': typeof AuthenticatedVideoaulasSubjectRoute
+  '/exercicios': typeof AuthenticatedExerciciosIndexRoute
   '/videoaulas': typeof AuthenticatedVideoaulasIndexRoute
 }
 export interface FileRoutesById {
@@ -96,6 +105,7 @@ export interface FileRoutesById {
   '/_authenticated/enem': typeof AuthenticatedEnemRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/videoaulas/$subject': typeof AuthenticatedVideoaulasSubjectRoute
+  '/_authenticated/exercicios/': typeof AuthenticatedExerciciosIndexRoute
   '/_authenticated/videoaulas/': typeof AuthenticatedVideoaulasIndexRoute
 }
 export interface FileRouteTypes {
@@ -108,6 +118,7 @@ export interface FileRouteTypes {
     | '/enem'
     | '/profile'
     | '/videoaulas/$subject'
+    | '/exercicios/'
     | '/videoaulas/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -118,6 +129,7 @@ export interface FileRouteTypes {
     | '/enem'
     | '/profile'
     | '/videoaulas/$subject'
+    | '/exercicios'
     | '/videoaulas'
   id:
     | '__root__'
@@ -129,6 +141,7 @@ export interface FileRouteTypes {
     | '/_authenticated/enem'
     | '/_authenticated/profile'
     | '/_authenticated/videoaulas/$subject'
+    | '/_authenticated/exercicios/'
     | '/_authenticated/videoaulas/'
   fileRoutesById: FileRoutesById
 }
@@ -197,6 +210,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedVideoaulasIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/exercicios/': {
+      id: '/_authenticated/exercicios/'
+      path: '/exercicios'
+      fullPath: '/exercicios/'
+      preLoaderRoute: typeof AuthenticatedExerciciosIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/videoaulas/$subject': {
       id: '/_authenticated/videoaulas/$subject'
       path: '/videoaulas/$subject'
@@ -212,6 +232,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedEnemRoute: typeof AuthenticatedEnemRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
   AuthenticatedVideoaulasSubjectRoute: typeof AuthenticatedVideoaulasSubjectRoute
+  AuthenticatedExerciciosIndexRoute: typeof AuthenticatedExerciciosIndexRoute
   AuthenticatedVideoaulasIndexRoute: typeof AuthenticatedVideoaulasIndexRoute
 }
 
@@ -220,6 +241,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedEnemRoute: AuthenticatedEnemRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
   AuthenticatedVideoaulasSubjectRoute: AuthenticatedVideoaulasSubjectRoute,
+  AuthenticatedExerciciosIndexRoute: AuthenticatedExerciciosIndexRoute,
   AuthenticatedVideoaulasIndexRoute: AuthenticatedVideoaulasIndexRoute,
 }
 
@@ -235,3 +257,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
