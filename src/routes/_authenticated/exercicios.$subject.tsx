@@ -68,7 +68,7 @@ function ExerciciosSubject() {
         {query.isLoading && (
           <div className="rounded-2xl border border-border bg-card p-12 flex flex-col items-center gap-3 text-center">
             <Loader2 className="h-10 w-10 animate-spin text-brand" />
-            <h2 className="text-lg font-semibold">Gerando 30 questões com IA…</h2>
+            <h2 className="text-lg font-semibold">Preparando exercícios…</h2>
             <p className="text-sm text-muted-foreground">Isso pode levar alguns segundos.</p>
           </div>
         )}
